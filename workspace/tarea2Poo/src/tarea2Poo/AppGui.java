@@ -1,7 +1,6 @@
 package tarea2Poo;
 
 import java.awt.Color;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -32,6 +31,7 @@ public class AppGui implements IConstants{
 		mainWindow.setSize(WINDOW_WIDTH, windowHeight);
 		mainWindow.setVisible(true);
 		mainWindow.setLayout(null);
+		mainWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		searchSpace = new JPanel();
 		
@@ -51,6 +51,7 @@ public class AppGui implements IConstants{
 		JButton searchButton = new JButton("Search...");
 		searchButton.setBounds(1050, 65, 150, 30);
 		searchSpace.add(searchButton);
+		
 		
 		
 	}
