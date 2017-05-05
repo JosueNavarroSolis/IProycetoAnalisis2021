@@ -7,7 +7,7 @@ public class Run {
 	public static void main(String[] args) {
 		AppGui.getInstance().runGui();
 		
-		List<Search> test = null;
+		/*List<Search> test = null;
 		
 		try {
 			test = HTMLRequester.makeRequest("hola hello ohayoo");
@@ -15,13 +15,13 @@ public class Run {
 			e.printStackTrace();
 		}
 		
-		Search testObj = test.get(0);
+		Search testObj = test.get(2);
 		
 		System.out.println(testObj.getSearchWord());
 		System.out.println(testObj.getTime());
 		System.out.println(testObj.getHtml());
 		
-		System.out.println(test.size());
+		System.out.println(test.size()); */
 
 	}
 	

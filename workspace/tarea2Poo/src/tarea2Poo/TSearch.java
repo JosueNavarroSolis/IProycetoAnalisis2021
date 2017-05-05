@@ -9,7 +9,7 @@ import java.util.List;
 
 public class TSearch extends Thread {
 	
-	private final String USER_AGENT = "Chrome";
+	private final String USER_AGENT = "3.2";
 	private List<Search> results;
 	private String searchWord;
 	
@@ -33,7 +33,6 @@ public class TSearch extends Thread {
 			results.add(searchObj);
 			time = System.currentTimeMillis() - startTime;
 			searchObj.setTime(time);
-			return;
 		} else {
 		
 			String url = "http://www.google.com/search?q="+searchWord;
@@ -55,7 +54,7 @@ public class TSearch extends Thread {
 
 	}
 	
-private String sendGet(String url) throws IOException {
+	private String sendGet(String url) throws IOException {
 
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -80,6 +79,8 @@ private String sendGet(String url) throws IOException {
 		}
 		in.close();
 
+		//print result
+		System.out.println(response.toString());
 		return response.toString();
 
 	}
