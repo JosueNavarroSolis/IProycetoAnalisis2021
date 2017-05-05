@@ -14,7 +14,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.text.html.HTMLEditorKit;
+
+/**
+ * 
+ * @author BISCUIT
+ * GUI implementation for the application
+ * Implemented as singleton
+ */
 
 public class AppGui implements IConstants{
 	
@@ -33,8 +39,10 @@ public class AppGui implements IConstants{
 		}
 		return instance;
 	}
-	
-	public void runGui(){
+	/**
+	 * Starts application
+	 */
+	public void runGui(){ //initialization of application GUI
 		JFrame mainWindow = new JFrame("Fast Text Content");
 		mainWindow.setSize(WINDOW_WIDTH, windowHeight);
 		mainWindow.setVisible(true);
@@ -85,21 +93,24 @@ public class AppGui implements IConstants{
 		mainWindow.repaint();
 		
 	}
-	
+	/**
+	 * Procedure used for search button to search for the words in the text area
+	 * @param searchWords words to be searched
+	 */
 	private void requestSearch(String searchWords){
 		if(searchWords != ""){
 			List<Search> results = null;
 			try {
-				results = HTMLRequester.makeRequest(searchWords);
+				results = HTMLRequester.makeRequest(searchWords); //assigns the results returned by the http get request
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 			
-			int YEnd = 0;
+			int YEnd = 0; //marks where the next web viewer needs to go
 			htmlPanel.removeAll();
 			htmlPanel.setPreferredSize(new Dimension(1920, 2010*results.size()));
 			
-			for(Search searchObj : results){
+			for(Search searchObj : results){ //creates a new web viewer and info with every search object returned by HTMLRequester
 				JPanel searchPanel = new JPanel();
 				searchPanel.setBounds(0, YEnd, 1920, 2000);
 				searchPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));

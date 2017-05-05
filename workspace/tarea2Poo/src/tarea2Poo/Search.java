@@ -5,7 +5,12 @@ public class Search {
 	private long time;
 	private String html;
 	
-	
+	/**
+	 * Class made to group important search information
+	 * @param pSearchWord word used for the search
+	 * @param pHtml HTML page
+	 * @param pTime amount of time that took to create object
+	 */
 	public Search(String pSearchWord, String pHtml, long pTime){
 		searchWord = pSearchWord;
 		html = pHtml;
@@ -15,11 +20,6 @@ public class Search {
 
 	protected String getSearchWord() {
 		return searchWord;
-	}
-
-
-	private void setSearchWord(String searchWord) {
-		this.searchWord = searchWord;
 	}
 
 
@@ -35,11 +35,6 @@ public class Search {
 
 	protected String getHtml() {
 		return html;
-	}
-
-
-	private void setHtml(String html) {
-		this.html = html;
 	}
 	
 	
