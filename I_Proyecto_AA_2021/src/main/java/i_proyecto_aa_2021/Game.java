@@ -18,10 +18,10 @@ public class Game {
     private static final int CATEGORY = 0;
     private static final int CARD = 1;
     
-    private ArrayList<Category> categories;
-    private int[] solution;
-    private ArrayList<int[]> suggestions;
-    private ArrayList<int[]> markableCards;
+    public ArrayList<Category> categories;
+    public int[] solution;
+    public ArrayList<int[]> suggestions;
+    public ArrayList<int[]> markableCards;
     private boolean isSolved;
     
     private Game() {

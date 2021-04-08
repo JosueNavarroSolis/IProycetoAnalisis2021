@@ -5,6 +5,10 @@
  */
 package Grafics;
 
+import i_proyecto_aa_2021.DriverMain;
+import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
+
 /**
  *
  * @author famil
@@ -16,15 +20,59 @@ public class Inicio extends javax.swing.JFrame {
      */
     public String type;
     public int pares;
+    DefaultTableModel model;
+    DefaultTableModel model2;
     
     public Inicio(){
         initComponents();
+        model = (DefaultTableModel) jTable3.getModel();
+        model.addColumn("Sospechoso");
+        model.addColumn("Arma");
+        model.addColumn("Motivo");
+        model.addColumn("Parte del cuerpo");
+        model.addColumn("Lugar");
+        this.jTable3.setModel(model);
+        model2 = (DefaultTableModel) jTable1.getModel();
+        model2.addColumn("Sospechoso");
+        model2.addColumn("Arma");
+        model2.addColumn("Motivo");
+        model2.addColumn("Parte del cuerpo");
+        model2.addColumn("Lugar");
+        this.jTable1.setModel(model2);
     }
     
     public void Title(){
         jLabel1.setText(type);
     }
-
+    
+    public void tables(){
+        switch (type){
+            
+            case "Backtraking" :
+                
+            case "Fuerza_Bruta":
+                DriverMain program = new DriverMain();
+                program.start();
+                
+                String []data = new String[5];
+                int j=0;
+                for(int[] suggestion : program.gameInst.suggestions){
+                    System.out.print("\n");
+                    for(int catIdx = 0; catIdx < suggestion.length; catIdx++){
+                        data[j++]=program.gameInst.categories.get(catIdx).getCards().get(suggestion[catIdx]).getName());
+                    }
+                    model.addRow(data);
+                    j=0;
+                }
+               j=0;
+               for(int catIdx = 0; catIdx < program.gameInst.solution.length; catIdx++){
+                    data[j++]=program.gameInst.categories.get(catIdx).getCards().get(program.gameInst.solution[catIdx]).getName());
+                }
+                model2.addRow(data);
+            }
+    
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -45,6 +93,7 @@ public class Inicio extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable3 = new javax.swing.JTable();
@@ -94,7 +143,7 @@ public class Inicio extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(240, 187, 195));
 
-        jLabel2.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("DialogInput", 0, 18)); // NOI18N
         jLabel2.setText("Tiempo");
         jLabel2.setToolTipText("");
 
@@ -105,7 +154,7 @@ public class Inicio extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,23 +168,12 @@ public class Inicio extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
-                "Sospechoso", "Arma", "Motivo", "Parte del cuerpo", "Lugar"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, true, false
-            };
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
             }
-        });
+        ));
         jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -157,38 +195,36 @@ public class Inicio extends javax.swing.JFrame {
 
         jPanel4.setBackground(new java.awt.Color(16, 164, 74));
 
+        jLabel3.setFont(new java.awt.Font("DialogInput", 0, 18)); // NOI18N
+        jLabel3.setText("jLabel3");
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 137, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jPanel5.setBackground(new java.awt.Color(16, 164, 74));
 
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
-                "Sospechosos", "Armas", "Motivos", "Parte del cuerpo", "Lugar"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, true, false
-            };
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
             }
-        });
+        ));
         jScrollPane3.setViewportView(jTable3);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -212,10 +248,7 @@ public class Inicio extends javax.swing.JFrame {
 
         jTable4.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+
             },
             new String [] {
                 "Carta 1", "Carta 2 "
@@ -283,7 +316,6 @@ public class Inicio extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -344,6 +376,7 @@ public class Inicio extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
