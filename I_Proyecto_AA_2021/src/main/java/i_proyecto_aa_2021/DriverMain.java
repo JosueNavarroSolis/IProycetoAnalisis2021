@@ -5,6 +5,9 @@
  */
 package i_proyecto_aa_2021;
 
+import java.time.Duration;
+import java.time.Instant;
+
 /**
  *
  * @author Z170
@@ -17,7 +20,6 @@ public class DriverMain {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
         Game gameInst = Game.getInstance();
         
         String[] categories = {"Sospechosos", "Arma", "Motivo", "Parte del cuerpo", "Lugar"};
@@ -28,8 +30,29 @@ public class DriverMain {
                             {"Sala", "Comedor", "Baño", "Terraza", "Cuarto", "Garage", "Patio", "Balcón", "Cocina"}};
         
         gameInst.buildDeck(categories, cards);
+        Instant start1 = Instant.now();
         gameInst.startBruteForceGame();
+        Instant end1 = Instant.now();
+        Duration timeElapsed1 = Duration.between(start1, end1);
         gameInst.printSuggestions();
+        /*Iterator<List<List<Integer>>> i = gameInst.restrictions.iterator();
+        while(i.hasNext()){
+            System.out.print(i.next());
+        }*/
+        System.out.print("\nTiempo de ejecucion (s:ms:ns):"+"\n"+timeElapsed1.toSecondsPart()+":"+timeElapsed1.toMillisPart()+":"+timeElapsed1.toNanosPart());
+        
+        //TIEMPOS DE CORRIDA
+        int amountOfRuns = 10000;
+        Instant startTest = Instant.now();
+        for(int i = 0; i < amountOfRuns; i++){
+            gameInst.buildDeck(categories, cards);
+            gameInst.startBruteForceGame();
+        }
+        Instant endTest = Instant.now();
+        Duration testTime = Duration.between(startTest, endTest);
+        System.out.print("\nTiempo de ejecucion total (s:ms:ns):"+"\n"+testTime.toSecondsPart()+":"+testTime.toMillisPart()+":"+testTime.toNanosPart());
+        Duration averageTime = testTime.dividedBy(amountOfRuns);
+        System.out.print("\nTiempo de ejecucion promedio (s:ms:ns):"+"\n"+averageTime.toSecondsPart()+":"+averageTime.toMillisPart()+":"+averageTime.toNanosPart());
     }
     public void start() {
         // TODO code application logic here

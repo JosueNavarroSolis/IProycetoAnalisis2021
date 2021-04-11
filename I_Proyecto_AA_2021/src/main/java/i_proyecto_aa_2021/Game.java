@@ -6,23 +6,30 @@
 package i_proyecto_aa_2021;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 /**
- *
+ * This is a singleton class that contains the game logic
+ * and provides attributes with information about the game
+ * configuration and results.
  * @author Z170
  */
 public class Game {
     
-    //Constants
+    //Constants for markableCards list array items
     private static final int CATEGORY = 0;
     private static final int CARD = 1;
     
     public ArrayList<Category> categories;
-    public int[] solution;
+    public int[] solution; //contains the solution for a game
     public ArrayList<int[]> suggestions;
-    private ArrayList<int[]> markableCards;
-    private boolean isSolved;
+    public Set<List<List<Integer>>> restrictions;
+    private ArrayList<int[]> markableCards; //contains the indexes of all markable cards (not marked or not part of solution)
+    public ArrayList<int[]> markedHistory;
+    private boolean isSolved; //false until solution is found
     
     private Game() {
     }
@@ -36,7 +43,14 @@ public class Game {
         private static final Game INSTANCE = new Game();
     }
     
-    
+    /**
+     * Method that builds the Category and Card instances required to play.
+     * Each category must correspond to an array in the cards list.
+     * @param pCategories Array with category names.
+     * @param pCards List of arrays that have the card names for each category.
+     * @return true if the amount of categories is equal to the amount of card arrays.
+     *         false otherwise and the deck is not built.
+     */
     public boolean buildDeck(String[] pCategories, String[][] pCards) {
         if(pCategories.length == pCards.length) {
             
@@ -53,14 +67,15 @@ public class Game {
                     tmpCategory.pushCard(new Card(cardName));
                 }
             }
-            /*for(Category cat : this.categories){
-                cat.printCategory();
-            }*/
             return true;
         }
         return false;
     }
     
+    /**
+     * Method that generates a random solution from the available cards
+     * and stores it in the solution attribute.
+     */
     private void generateSolution(){
         this.solution = new int[this.categories.size()];
         Random rnd = new Random();
@@ -75,6 +90,64 @@ public class Game {
         }
     }
     
+    /**
+     * Method that generates a requested amount of random pair restrictions,
+     * the restrictions are stored in the restrictions attribute.
+     * @param amount Quantity of restrictions to be generated.
+     */
+    private void generateRestrictions(int amount){
+        this.restrictions = new HashSet<>();
+        Random rnd = new Random();
+        while(this.restrictions.size() < amount){
+            int firstRndCategory = (int)(rnd.nextDouble() * this.categories.size());
+            int firstRndCard = (int)(rnd.nextDouble() * this.categories.get(firstRndCategory).getLength());
+            int secondRndCategory = (int)(rnd.nextDouble() * this.categories.size());
+            
+            while(firstRndCategory == secondRndCategory){
+                secondRndCategory = (int)(rnd.nextDouble() * this.categories.size());
+            }
+            int secondRndCard = (int)(rnd.nextDouble() * this.categories.get(secondRndCategory).getLength());
+            
+            if(validateRestriction(firstRndCategory, firstRndCard, secondRndCategory, secondRndCard)){
+                if(firstRndCategory > secondRndCategory){
+                    int tmpCategory = firstRndCategory;
+                    int tmpCard = firstRndCard;
+                    firstRndCategory = secondRndCategory;
+                    firstRndCard = secondRndCard;
+                    secondRndCategory = tmpCategory;
+                    secondRndCard = tmpCard;
+                }
+                
+                List<Integer> firstCardIndex = new ArrayList<>();
+                firstCardIndex.add(firstRndCategory); firstCardIndex.add(firstRndCard);
+                List<Integer> secondCardIndex = new ArrayList<>();
+                secondCardIndex.add(secondRndCategory); secondCardIndex.add(secondRndCard);
+                List<List<Integer>> restriction = new ArrayList();
+                restriction.add(firstCardIndex); restriction.add(secondCardIndex);
+            
+                this.restrictions.add(restriction);
+            }
+        }
+    }
+    
+    /**
+     * Method that validates a restriction isn't part of the solution.
+     * @param firstCategory first restriction pair category
+     * @param firstCard first restriction pair card
+     * @param secondCategory second restriction pair category
+     * @param secondCard second restriction pair card
+     * @return true if the restriction is not part of the solution. false otherwise.
+     */
+    private boolean validateRestriction(int firstCategory, int firstCard, int secondCategory, int secondCard){
+        if((firstCard == this.solution[firstCategory]) && (secondCard == this.solution[secondCategory])){
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * Method that generates the list with all markable cards before game begins.
+     */
     private void generateMarkableCards(){
         this.markableCards = new ArrayList<>();
         int[] markableCard;
@@ -87,40 +160,49 @@ public class Game {
                 }
             }
         }
-        /*for(int[] card : this.markableCards){
-            System.out.print(card[0]+" "+card[1]+"\n");
-        }*/
     }
     
+    /**
+     * Method that picks a random card from markable cards and sets its corresponding
+     * card instance as marked.
+     */
     private void markCard(){
         Random rnd = new Random();
         int rndIndex = (int)(rnd.nextDouble() * this.markableCards.size());
         if(this.markableCards.size() > 0){
             int[] randomMarkableCardIdx = this.markableCards.get(rndIndex);
             this.categories.get(randomMarkableCardIdx[CATEGORY]).getCards().get(randomMarkableCardIdx[CARD]).setIsMarked(true);
+            this.markedHistory.add(randomMarkableCardIdx);
             this.markableCards.remove(rndIndex);
         }
-        
-        /*for(Category cat : this.categories){
-                cat.printCategory();
-            }*/
     }
     
+    /**
+     * Procedure that initializes a brute force game and calls the recursive
+     * method bruteForceAux.
+     */
     public void startBruteForceGame(){
         if(this.categories.size() > 0){
             this.isSolved = false;
             this.suggestions = new ArrayList<>();
+            this.markedHistory = new ArrayList<>();
             generateSolution();
             generateMarkableCards();
             int[] suggestion = new int[this.categories.size()];
             for(int catIdx = 0; catIdx < suggestion.length; catIdx++)
                 suggestion[catIdx] = 0;
-            //timer start
             bruteForceAux(0, suggestion, true);
-            //timer end
         }
     }
     
+    /**
+     * Recursive method that contains the logic of the brute force algorithm
+     * for solving the game. This method is called recursively until the solution
+     * is found.
+     * @param catIdx current category index.
+     * @param currentSuggestion array with the current combination of cards to be suggested
+     * @param isSuggestable value that determines wether the current suggestion should be suggested.
+     */
     private void bruteForceAux(int catIdx, int[] currentSuggestion, boolean isSuggestable){
         if(!this.isSolved){
             if(isSuggestable){
@@ -178,10 +260,36 @@ public class Game {
         }
     }
     
+    public void startBacktrackingGame(){
+        if(this.categories.size() > 0){
+            this.isSolved = false;
+            this.suggestions = new ArrayList<>();
+            this.markedHistory = new ArrayList<>();
+            generateSolution();
+            generateMarkableCards();
+            generateRestrictions(3);
+            int[] suggestion = new int[this.categories.size()];
+            for(int catIdx = 0; catIdx < suggestion.length; catIdx++)
+                suggestion[catIdx] = 0;
+            //timer start
+            bruteForceAux(0, suggestion, true);
+            //timer end
+        }
+    }
+    
+    /**
+     * Method for adding a suggestion.
+     * @param suggestion suggestion to be added.
+     */
     private void makeSuggestion(int[] suggestion){
         this.suggestions.add(suggestion);
     }
-    
+     
+    /**
+     * Method that checks if the suggestion matches with the solution.
+     * @param suggestion
+     * @return 
+     */
     private boolean checkSolve(int[] suggestion){
         for(int catIdx = 0; catIdx < suggestion.length; catIdx++){
             if(this.solution[catIdx] != suggestion[catIdx])

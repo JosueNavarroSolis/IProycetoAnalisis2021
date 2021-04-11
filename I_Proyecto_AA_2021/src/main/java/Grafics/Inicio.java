@@ -58,14 +58,14 @@ public class Inicio extends javax.swing.JFrame {
                 int j=0;
                 for(int[] suggestion : program.gameInst.suggestions){
                     for(int catIdx = 0; catIdx < suggestion.length; catIdx++){
-                        data[j++]=program.gameInst.categories.get(catIdx).getCards().get(suggestion[catIdx]).getName());
+                        data[j++]=program.gameInst.categories.get(catIdx).getCards().get(suggestion[catIdx]).getName();
                     }
                     model.addRow(data);
                     j=0;
                 }
                j=0;
                for(int catIdx = 0; catIdx < program.gameInst.solution.length; catIdx++){
-                    data[j++]=program.gameInst.categories.get(catIdx).getCards().get(program.gameInst.solution[catIdx]).getName());
+                    data[j++]=program.gameInst.categories.get(catIdx).getCards().get(program.gameInst.solution[catIdx]).getName();
                 }
                 model2.addRow(data);
                 break;
