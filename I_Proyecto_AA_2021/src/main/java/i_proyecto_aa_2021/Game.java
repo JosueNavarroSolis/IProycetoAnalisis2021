@@ -21,7 +21,7 @@ public class Game {
     public ArrayList<Category> categories;
     public int[] solution;
     public ArrayList<int[]> suggestions;
-    public ArrayList<int[]> markableCards;
+    private ArrayList<int[]> markableCards;
     private boolean isSolved;
     
     private Game() {
@@ -115,8 +115,9 @@ public class Game {
             int[] suggestion = new int[this.categories.size()];
             for(int catIdx = 0; catIdx < suggestion.length; catIdx++)
                 suggestion[catIdx] = 0;
-            
+            //timer start
             bruteForceAux(0, suggestion, true);
+            //timer end
         }
     }
     

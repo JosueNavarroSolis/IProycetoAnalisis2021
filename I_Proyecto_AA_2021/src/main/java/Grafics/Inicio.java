@@ -49,7 +49,7 @@ public class Inicio extends javax.swing.JFrame {
         switch (type){
             
             case "Backtraking" :
-                
+                break;
             case "Fuerza_Bruta":
                 DriverMain program = new DriverMain();
                 program.start();
@@ -57,7 +57,6 @@ public class Inicio extends javax.swing.JFrame {
                 String []data = new String[5];
                 int j=0;
                 for(int[] suggestion : program.gameInst.suggestions){
-                    System.out.print("\n");
                     for(int catIdx = 0; catIdx < suggestion.length; catIdx++){
                         data[j++]=program.gameInst.categories.get(catIdx).getCards().get(suggestion[catIdx]).getName());
                     }
@@ -69,8 +68,8 @@ public class Inicio extends javax.swing.JFrame {
                     data[j++]=program.gameInst.categories.get(catIdx).getCards().get(program.gameInst.solution[catIdx]).getName());
                 }
                 model2.addRow(data);
+                break;
             }
-    
     }
     
     /**
