@@ -103,8 +103,11 @@ public class DriverMain {
                             {"Sala", "Comedor", "Baño", "Terraza", "Cuarto", "Garage", "Patio", "Balcón", "Cocina"}};
         
         gameInst.buildDeck(categories, cards);
+        Instant start1 = Instant.now();
         gameInst.startBruteForceGame();
-        gameInst.printSuggestions();
+        Instant end1 = Instant.now();
+        Duration timeElapsed1 = Duration.between(start1, end1);
+        //gameInst.printSuggestions();
     }
     
 }
