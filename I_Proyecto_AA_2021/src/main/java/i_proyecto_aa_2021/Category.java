@@ -1,15 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package i_proyecto_aa_2021;
 
 import java.util.ArrayList;
 
 /**
- *
- * @author Z170
+ * Class that has the necessary attributes and methods for
+ * making categories that contain cards for the game.
+ * @author Hans
  */
 public class Category {
 
@@ -34,14 +30,25 @@ public class Category {
         this.name = name;
     }
 
+    /**
+     * Method for adding card objects to the category instance.
+     * @param pCard Card instance to be added to the category.
+     */
     public void pushCard(Card pCard) {
         this.cards.add(pCard);
     }
     
+    /**
+     * Method to get the amount of cards in the category instance.
+     * @return number of cards in category.
+     */
     public int getLength() {
         return this.cards.size();
     }
     
+    /**
+     * Method for printing all the cards in the category.
+     */
     public void printCategory(){
         String cardsStr = "[";
         for (Card tmpCard : this.cards){

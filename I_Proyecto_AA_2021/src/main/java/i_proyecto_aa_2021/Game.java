@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package i_proyecto_aa_2021;
 
 import java.util.ArrayList;
@@ -16,7 +11,7 @@ import java.util.Set;
  * This is a singleton class that contains the game logic
  * and provides attributes with information about the game
  * configuration and results.
- * @author Z170
+ * @author Hans
  */
 public class Game {
     
@@ -35,6 +30,11 @@ public class Game {
     private Game() {
     }
     
+    /**
+     * Static method that gets the Game instance or creates
+     * a new one if it's not initialized.
+     * @return this game instance.
+     */
     public static Game getInstance() {
         return GameHolder.INSTANCE;
     }
@@ -85,10 +85,6 @@ public class Game {
             int rndIndex = (int)(rnd.nextDouble() * this.categories.get(idx).getCards().size());
             this.solution[idx] = rndIndex;
         }
-        
-        /*for(int catIdx = 0; catIdx < this.solution.length; catIdx++){
-            System.out.print(this.solution[catIdx]+" -> "+this.categories.get(catIdx).getCards().get(this.solution[catIdx]).getName()+"\n");
-        }*/
     }
     
     /**
@@ -261,6 +257,11 @@ public class Game {
         }
     }
     
+    /**
+     * Procedure that initializes a backtracking game and calls the recursive
+     * method backtrackingAux.
+     * @param amountOfRestrictions number of restrictions to be generated for the game.
+     */
     public void startBacktrackingGame(int amountOfRestrictions){
         if(this.categories.size() > 0){
             this.isSolved = false;
@@ -276,6 +277,14 @@ public class Game {
         }
     }
     
+    /**
+     * Recursive method that contains the logic of the backtracking algorithm
+     * for solving the game. This method is called recursively until the solution
+     * is found.
+     * @param catIdx current category index.
+     * @param currentSuggestion array with the current combination of cards to be suggested
+     * @param isSuggestable value that determines wether the current suggestion should be suggested.
+     */
     private void backtrackingAux(int catIdx, int[] currentSuggestion, boolean isSuggestable){
         if(!this.isSolved){
             if(isSuggestable){
@@ -381,6 +390,12 @@ public class Game {
         return true;
     }
     
+    /**
+     * Method that gets the restriction state that the suggestion given is found in.
+     * @param suggestion suggestion to be checked.
+     * @param currentIdx current category index.
+     * @return restriction state for the given suggestion.
+     */
     private RestrictionState getSuggestionRestrictionState(int[] suggestion, int currentIdx){
         RestrictionState suggestionRestrictionState = RestrictionState.NONE;
         Iterator<List<List<Integer>>> i = this.restrictions.iterator();
@@ -401,6 +416,13 @@ public class Game {
         return suggestionRestrictionState;
     }
     
+    /**
+     * Method that gets all the category indexes that have a restricted pair
+     * on and after the current category index.
+     * @param suggestion suggestion to be checked.
+     * @param currentIdx current category index.
+     * @return List with the category indexes that contain a restricted pair.
+     */
     private ArrayList<Integer> getRestrictionsAfterIdx(int[] suggestion, int currentIdx){
         ArrayList<Integer> restrictionIndexes = new ArrayList<>();
         Iterator<List<List<Integer>>> i = this.restrictions.iterator();
@@ -424,6 +446,12 @@ public class Game {
         return restrictionIndexes;
     }
     
+    /**
+     * Method that gets the marked state that the suggestion given is found in.
+     * @param suggestion suggestion to be checked.
+     * @param currentIdx current category index.
+     * @return marked state for the given suggestion.
+     */
     private MarkedState getSuggestionMarkedState(int[] suggestion, int currentIdx){
         int catIdx = 0;
         while(catIdx < currentIdx){
@@ -449,6 +477,14 @@ public class Game {
         return MarkedState.NONE;
     }
     
+    /**
+     * Method that gets all the category indexes that have a marked card
+     * after the current index.
+     * @param suggestion suggestion to be checked.
+     * @param currentIdx current category index.
+     * @return list containing all the category indexes that have a marked card
+     *          after current index.
+     */
     private ArrayList<Integer> getIndexesAfter(int[] suggestion, int currentIdx){
         ArrayList<Integer> idxList = new ArrayList<>();
         for(int catIdx = currentIdx+1; catIdx < suggestion.length; catIdx++){
@@ -460,6 +496,11 @@ public class Game {
         return idxList;
     }
     
+    /**
+     * Method that turns all the given suggestions indexes into its correct
+     * card name.
+     * @return list of all given suggestions in string format.
+     */
     public ArrayList<String[]> suggestionsToString(){
         ArrayList<String[]> suggestionsStrList = new ArrayList<>();
         for(int[] suggestion : this.suggestions){
@@ -473,6 +514,11 @@ public class Game {
         return suggestionsStrList;
     }
     
+    /**
+     * Method that turns the solution indexes into its correct
+     * card name.
+     * @return solution in string format.
+     */
     public String[] solutionToStr(){
         String[] solutionStr = new String[this.solution.length];
         for(int catIdx = 0; catIdx < this.solution.length; catIdx++){
@@ -481,6 +527,11 @@ public class Game {
         return solutionStr;
     }
     
+    /**
+     * Method that turns all the generated restrictions indexes into its correct
+     * card name.
+     * @return list of all restrictions in string format.
+     */
     public ArrayList<String[]> restrictionsToString(){
         ArrayList<String[]> restrictionsStrList = new ArrayList<>();
         Iterator<List<List<Integer>>> i = restrictions.iterator();
@@ -496,7 +547,11 @@ public class Game {
         return restrictionsStrList;
     }
     
-    
+    /**
+     * Method that turns all the marked cards history indexes into its correct
+     * card name.
+     * @return list of all marked cards in string format.
+     */
     public ArrayList<String> markedCardsToString(){
         ArrayList<String> markedCardsStrList = new ArrayList<>();
         
@@ -508,6 +563,9 @@ public class Game {
         return markedCardsStrList;
     }
             
+    /**
+     * Method that prints all the given suggestions.
+     */
     public void printSuggestions(){
         int counter = 1;
         for(int[] suggestion : this.suggestions){

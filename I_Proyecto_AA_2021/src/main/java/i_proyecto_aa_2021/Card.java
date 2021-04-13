@@ -1,19 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package i_proyecto_aa_2021;
 
 /**
- *
- * @author Z170
+ * Class that has the necessary attributes to make a card
+ * for the game.
+ * @author Hans
  */
 public class Card {
     
     private String name;
     private boolean isMarked;
     
+    /**
+     * Constructor method that creates a card instance
+     * set as not marked.
+     * @param pName Name that will be given to the new card instance.
+     */
     public Card(String pName){
         this.setName(pName);
         this.setIsMarked(false);
