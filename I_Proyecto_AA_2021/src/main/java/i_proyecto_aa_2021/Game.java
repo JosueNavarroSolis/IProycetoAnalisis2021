@@ -7,6 +7,7 @@ package i_proyecto_aa_2021;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -19,7 +20,7 @@ import java.util.Set;
  */
 public class Game {
     
-    //Constants for markableCards list array items
+    //Constants for markableCards and restrictions list array items
     private static final int CATEGORY = 0;
     private static final int CARD = 1;
     
@@ -85,9 +86,9 @@ public class Game {
             this.solution[idx] = rndIndex;
         }
         
-        for(int catIdx = 0; catIdx < this.solution.length; catIdx++){
+        /*for(int catIdx = 0; catIdx < this.solution.length; catIdx++){
             System.out.print(this.solution[catIdx]+" -> "+this.categories.get(catIdx).getCards().get(this.solution[catIdx]).getName()+"\n");
-        }
+        }*/
     }
     
     /**
@@ -260,20 +261,102 @@ public class Game {
         }
     }
     
-    public void startBacktrackingGame(){
+    public void startBacktrackingGame(int amountOfRestrictions){
         if(this.categories.size() > 0){
             this.isSolved = false;
             this.suggestions = new ArrayList<>();
             this.markedHistory = new ArrayList<>();
             generateSolution();
             generateMarkableCards();
-            generateRestrictions(3);
+            generateRestrictions(amountOfRestrictions);
             int[] suggestion = new int[this.categories.size()];
             for(int catIdx = 0; catIdx < suggestion.length; catIdx++)
                 suggestion[catIdx] = 0;
-            //timer start
-            bruteForceAux(0, suggestion, true);
-            //timer end
+            backtrackingAux(0, suggestion, true);
+        }
+    }
+    
+    private void backtrackingAux(int catIdx, int[] currentSuggestion, boolean isSuggestable){
+        if(!this.isSolved){
+            if(isSuggestable){
+                makeSuggestion(currentSuggestion);
+                if(checkSolve(currentSuggestion)){
+                    this.isSolved = true;
+                    return;
+                }
+                markCard();
+            }
+            
+            MarkedState suggestionMarkedState = getSuggestionMarkedState(currentSuggestion, catIdx);
+            int[] newSuggestion = currentSuggestion.clone();
+            switch(suggestionMarkedState)
+            {
+                case BEFORE_INDEX:
+                    return;
+                case ON_INDEX:
+                    if(newSuggestion[catIdx]+1 < this.categories.get(catIdx).getLength()){
+                        newSuggestion[catIdx] += 1;
+                    }
+                    else
+                        return;
+                    break;
+                case ON_AFTER_INDEX:
+                    if(newSuggestion[catIdx]+1 < this.categories.get(catIdx).getLength()){
+                        newSuggestion[catIdx] += 1;
+                        ArrayList<Integer> markedAfterIdx = getIndexesAfter(newSuggestion, catIdx);
+                        for(Integer markedIdx : markedAfterIdx){
+                            if(newSuggestion[markedIdx]+1 < this.categories.get(markedIdx).getLength()){
+                                newSuggestion[markedIdx] += 1;
+                            }
+                            else return;
+                        }
+                    }
+                    else 
+                        return;
+                    break;
+                case AFTER_INDEX:
+                    ArrayList<Integer> markedAfterIdx = getIndexesAfter(newSuggestion, catIdx);
+                    for(Integer markedIdx : markedAfterIdx){
+                        if(newSuggestion[markedIdx]+1 < this.categories.get(markedIdx).getLength()){
+                            newSuggestion[markedIdx] += 1;
+                        }
+                        else return;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            
+            RestrictionState suggestionRestrictionState = getSuggestionRestrictionState(newSuggestion, catIdx);
+            ArrayList<Integer> suggestionRestrictionIndexes = getRestrictionsAfterIdx(newSuggestion, catIdx);
+            
+            switch(suggestionRestrictionState){
+                case BEFORE_INDEX:
+                    return;
+                case ON_AFTER_INDEX:
+                    for(Integer restrictionIdx : suggestionRestrictionIndexes){
+                        if(newSuggestion[restrictionIdx]+1 < this.categories.get(restrictionIdx).getLength()){
+                            int[] restrictionSuggestion = newSuggestion.clone();
+                            restrictionSuggestion[restrictionIdx] += 1;
+                            backtrackingAux(catIdx, restrictionSuggestion, true);
+                        }
+                    }
+                    break;
+                case NONE:
+                    if(suggestionMarkedState == MarkedState.NONE){
+                        if(catIdx+1 < this.categories.size()){
+                            backtrackingAux(catIdx+1, currentSuggestion, false);
+                        }
+                        if(newSuggestion[catIdx]+1 < this.categories.get(catIdx).getLength()){
+                            newSuggestion[catIdx] += 1;
+                            backtrackingAux(catIdx, newSuggestion, true);
+                        }
+                    } else {
+                        backtrackingAux(catIdx, newSuggestion, true);
+                    }
+                    
+                    break;
+            }
         }
     }
     
@@ -296,6 +379,49 @@ public class Game {
                 return false;
         }
         return true;
+    }
+    
+    private RestrictionState getSuggestionRestrictionState(int[] suggestion, int currentIdx){
+        RestrictionState suggestionRestrictionState = RestrictionState.NONE;
+        Iterator<List<List<Integer>>> i = this.restrictions.iterator();
+        while(i.hasNext()){
+            List<List<Integer>> currentRestriction = i.next();
+            List<Integer> firstCard = currentRestriction.get(0);
+            List<Integer> secondCard = currentRestriction.get(1);
+            if((firstCard.get(CARD) == suggestion[firstCard.get(CATEGORY)])
+              &&(secondCard.get(CARD) == suggestion[secondCard.get(CATEGORY)])){
+                if((firstCard.get(CATEGORY) < currentIdx) && (secondCard.get(CATEGORY) < currentIdx)){
+                    suggestionRestrictionState = RestrictionState.BEFORE_INDEX;
+                    break;
+                } else {
+                    suggestionRestrictionState = RestrictionState.ON_AFTER_INDEX;
+                }
+            }
+        }
+        return suggestionRestrictionState;
+    }
+    
+    private ArrayList<Integer> getRestrictionsAfterIdx(int[] suggestion, int currentIdx){
+        ArrayList<Integer> restrictionIndexes = new ArrayList<>();
+        Iterator<List<List<Integer>>> i = this.restrictions.iterator();
+        while(i.hasNext()){
+            List<List<Integer>> currentRestriction = i.next();
+            List<Integer> firstCard = currentRestriction.get(0);
+            List<Integer> secondCard = currentRestriction.get(1);
+            if((firstCard.get(CARD) == suggestion[firstCard.get(CATEGORY)])
+              &&(secondCard.get(CARD) == suggestion[secondCard.get(CATEGORY)])){
+                if((!restrictionIndexes.contains(firstCard.get(CATEGORY)))
+                    && (firstCard.get(CATEGORY)>= currentIdx)){
+                    restrictionIndexes.add(firstCard.get(CATEGORY));
+                }
+                if((!restrictionIndexes.contains(secondCard.get(CATEGORY)))
+                    && (secondCard.get(CATEGORY)>= currentIdx)){
+                    restrictionIndexes.add(secondCard.get(CATEGORY));
+                }
+            }
+        }
+        
+        return restrictionIndexes;
     }
     
     private MarkedState getSuggestionMarkedState(int[] suggestion, int currentIdx){
@@ -334,9 +460,59 @@ public class Game {
         return idxList;
     }
     
-    public void printSuggestions(){
+    public ArrayList<String[]> suggestionsToString(){
+        ArrayList<String[]> suggestionsStrList = new ArrayList<>();
         for(int[] suggestion : this.suggestions){
-            System.out.print("\n");
+            String[] suggestionStr = new String[5];
+            for(int catIdx = 0; catIdx < suggestion.length; catIdx++){
+                suggestionStr[catIdx] = this.categories.get(catIdx).getCards().get(suggestion[catIdx]).getName();
+            }
+            suggestionsStrList.add(suggestionStr);
+        }
+        
+        return suggestionsStrList;
+    }
+    
+    public String[] solutionToStr(){
+        String[] solutionStr = new String[this.solution.length];
+        for(int catIdx = 0; catIdx < this.solution.length; catIdx++){
+            solutionStr[catIdx] = this.categories.get(catIdx).getCards().get(this.solution[catIdx]).getName();
+        }
+        return solutionStr;
+    }
+    
+    public ArrayList<String[]> restrictionsToString(){
+        ArrayList<String[]> restrictionsStrList = new ArrayList<>();
+        Iterator<List<List<Integer>>> i = restrictions.iterator();
+        while(i.hasNext()){
+            List<List<Integer>> restriction = i.next();
+            List<Integer> firstCard = restriction.get(0);
+            List<Integer> secondCard = restriction.get(1);
+            String[] restrictionStr = new String[2];
+            restrictionStr[0] = this.categories.get(firstCard.get(CATEGORY)).getCards().get(firstCard.get(CARD)).getName();
+            restrictionStr[1] = this.categories.get(secondCard.get(CATEGORY)).getCards().get(secondCard.get(CARD)).getName();
+            restrictionsStrList.add(restrictionStr);
+        }
+        return restrictionsStrList;
+    }
+    
+    
+    public ArrayList<String> markedCardsToString(){
+        ArrayList<String> markedCardsStrList = new ArrayList<>();
+        
+        for(int[] markedCard : this.markedHistory){
+            String cardName = this.categories.get(markedCard[CATEGORY]).getCards().get(markedCard[CARD]).getName();
+            markedCardsStrList.add(cardName);
+        }
+        
+        return markedCardsStrList;
+    }
+            
+    public void printSuggestions(){
+        int counter = 1;
+        for(int[] suggestion : this.suggestions){
+            System.out.print("\n"+counter+". ");
+            counter++;
             for(int catIdx = 0; catIdx < suggestion.length; catIdx++){
                 System.out.print(this.categories.get(catIdx).getCards().get(suggestion[catIdx]).getName() + " ");
             }
