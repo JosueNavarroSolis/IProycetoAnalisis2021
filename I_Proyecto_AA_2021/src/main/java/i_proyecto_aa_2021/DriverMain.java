@@ -14,7 +14,7 @@ public class DriverMain {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         Game gameInst = Game.getInstance();
         
         String[] categories = {"Sospechosos", "Arma", "Motivo", "Parte del cuerpo", "Lugar"};
@@ -24,11 +24,12 @@ public class DriverMain {
                             {"Cabeza", "Pecho", "Abdomen", "Espalda", "Piernas", "Brazos"},
                             {"Sala", "Comedor", "Baño", "Terraza", "Cuarto", "Garage", "Patio", "Balcón", "Cocina"}};
         
-        gameInst.buildDeck(categories, cards);
+        /*gameInst.buildDeck(categories, cards);
         Instant start1 = Instant.now();
         gameInst.startBacktrackingGame(3);
         Instant end1 = Instant.now();
-        Duration timeElapsed1 = Duration.between(start1, end1);
+        Duration data = Duration.between(start1, end1);
+        Duration timeElapsed1 = Duration.ofNanos(data.getNano());
         System.out.print("\n");
         
         //USO DE LOS TOSTRING
@@ -59,9 +60,9 @@ public class DriverMain {
         
         System.out.print("\nTiempo de ejecucion (s:ms:ns):"+"\n"+timeElapsed1.toSecondsPart()+":"+timeElapsed1.toMillisPart()+":"+timeElapsed1.toNanosPart());
         
-        /*
+        
         //TIEMPOS DE CORRIDA
-        int amountOfRuns = 10000;
+        int amountOfRuns = 5730;
         Instant startBFTest = Instant.now();
         for(int i = 0; i < amountOfRuns; i++){
             gameInst.buildDeck(categories, cards);
@@ -76,33 +77,14 @@ public class DriverMain {
         Instant startBTTest = Instant.now();
         for(int i = 0; i < amountOfRuns; i++){
             gameInst.buildDeck(categories, cards);
-            gameInst.startBacktrackingGame(3);
+            gameInst.startBacktrackingGame(0);
         }
         Instant endBTTest = Instant.now();
         Duration testTimeBT = Duration.between(startBTTest, endBTTest);
         System.out.print("\nTiempo de ejecucion total (s:ms:ns):"+"\n"+testTimeBT.toSecondsPart()+":"+testTimeBT.toMillisPart()+":"+testTimeBT.toNanosPart());
         Duration averageTimeBT = testTimeBT.dividedBy(amountOfRuns);
         System.out.print("\nTiempo de ejecucion promedio (s:ms:ns):"+"\n"+averageTimeBT.toSecondsPart()+":"+averageTimeBT.toMillisPart()+":"+averageTimeBT.toNanosPart());
-    
-        */
-    }
-    public void start() {
-        // TODO code application logic here
-        gameInst = Game.getInstance();
         
-        String[] categories = {"Sospechosos", "Arma", "Motivo", "Parte del cuerpo", "Lugar"};
-        String[][] cards = {{"Amigo/Amiga", "Novio/Novia", "Vecino/Vecina", "Mensajero", "Extraño"},
-                            {"Pistola", "Cuchillo", "Machete", "Pala", "Bate", "Botella", "Tubo", "Cuerda"},
-                            {"Venganza", "Celos", "Dinero", "Accidente", "Drogas", "Robo"},
-                            {"Cabeza", "Pecho", "Abdomen", "Espalda", "Piernas", "Brazos"},
-                            {"Sala", "Comedor", "Baño", "Terraza", "Cuarto", "Garage", "Patio", "Balcón", "Cocina"}};
-        
-        gameInst.buildDeck(categories, cards);
-        Instant start1 = Instant.now();
-        gameInst.startBruteForceGame();
-        Instant end1 = Instant.now();
-        Duration timeElapsed1 = Duration.between(start1, end1);
-        //gameInst.printSuggestions();
-    }
+    }*/
     
 }

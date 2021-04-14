@@ -6,8 +6,10 @@
 package Grafics;
 
 /**
- *
- * @author famil
+ * This algorithm is the main jframe where 
+ * they send the data to the corresponding 
+ * algorithm to solve the problem
+ * @author Josue
  */
 public class Principal extends javax.swing.JFrame {
 
@@ -258,20 +260,23 @@ public class Principal extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    /**
+     * Pressing the button sends the data to the new window.
+     */
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         // TODO add your handling code here:
         Grafics.AboutUs ventana = new Grafics.AboutUs();
         ventana.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton1MouseClicked
-
+    /**
+     * Pressing the button sends the data to the new window.
+     */
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         // TODO add your handling code here:
         Grafics.Inicio ventana = new Grafics.Inicio();
         ventana.type = jComboBox1.getSelectedItem().toString();
         ventana.pares = (Integer) jSpinner1.getValue();
-        ventana.Title();
         ventana.tables();
         ventana.setVisible(true);
         this.setVisible(false);

@@ -19,7 +19,8 @@ import java.time.Instant;
 public class Inicio extends javax.swing.JFrame {
 
     /**
-     * Creates new form Inicio
+     * Create the variables to be able to display 
+     * the data in the jframe and run the algorithm
      */
     public Game gameInst;
     public String type;
@@ -34,7 +35,9 @@ public class Inicio extends javax.swing.JFrame {
                         {"Venganza", "Celos", "Dinero", "Accidente", "Drogas", "Robo"},
                         {"Cabeza", "Pecho", "Abdomen", "Espalda", "Piernas", "Brazos"},
                         {"Sala", "Comedor", "Baño", "Terraza", "Cuarto", "Garage", "Patio", "Balcón", "Cocina"}};
-    
+    /**
+     * Create new Home shapes and tables
+     */
     public Inicio(){
         initComponents();
         model = (DefaultTableModel) jTable3.getModel();
@@ -57,15 +60,16 @@ public class Inicio extends javax.swing.JFrame {
         model3.addColumn("Carta 2");
         this.jTable4.setModel(model3);
         model4 = (DefaultTableModel) jTable5.getModel();
+        model4.addColumn("Numero");
         model4.addColumn("Carta");
         this.jTable5.setModel(model4);
     }
-    
-    public void Title(){
-        jLabel1.setText(type);
-    }
-    
+    /**
+     * This method calls the corresponding algorithm and receives the data to display it in the graphical interface.
+     * Each piece of data must correspond to a table in the interface.
+     */
     public void tables(){
+        jLabel1.setText(type);
         Game gameInst = Game.getInstance();
         Instant start1;
         Instant end1;
@@ -80,15 +84,26 @@ public class Inicio extends javax.swing.JFrame {
                 timeElapsed1 = Duration.between(start1, end1);
                 this.jLabel3.setText(timeElapsed1.toString());
                 model2.addRow(gameInst.solutionToStr());
+                String[] data = new String[6];
+                int index =1;
                 for(String[] suggestion : gameInst.suggestionsToString()){
-                    model.addRow(suggestion);
+                    data[0]=String.valueOf(index++);
+                    int num =1;
+                    for(int i =0;i < suggestion.length;i++){
+                        data[num++] = suggestion[i].toString();
+                    }
+                    num=0;
+                    model.addRow(data);
                 }
+                
                 for (String[] strList : gameInst.restrictionsToString()){
                     model3.addRow(strList);
                 }
+                int numer=1;
                 for (String str: gameInst.markedCardsToString()){
-                    String[] strList = new String[1];
-                    strList[0] = str;
+                    String[] strList = new String[2];
+                    strList[0] = String.valueOf(numer++);
+                    strList[1] = str;
                     model4.addRow(strList);
                 }
                 break;
@@ -100,12 +115,22 @@ public class Inicio extends javax.swing.JFrame {
                 timeElapsed1 = Duration.between(start1, end1);
                 this.jLabel3.setText(timeElapsed1.toString());
                 model2.addRow(gameInst.solutionToStr());
+                String[] data1 = new String[6];
+                int index1 =1;
                 for(String[] suggestion : gameInst.suggestionsToString()){
-                    model.addRow(suggestion);
+                    data1[0]=String.valueOf(index1++);
+                    int num =1;
+                    for(int i =0;i < suggestion.length;i++){
+                        data1[num++] = suggestion[i].toString();
+                    }
+                    num=0;
+                    model.addRow(data1);
                 }
+                int nume=1;
                 for (String str: gameInst.markedCardsToString()){
-                    String[] strList = new String[1];
-                    strList[0] = str;
+                    String[] strList = new String[2];
+                    strList[0] = String.valueOf(nume++);
+                    strList[1] = str;
                     model4.addRow(strList);
                 }
                 break;
@@ -458,9 +483,6 @@ public class Inicio extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton1MouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
